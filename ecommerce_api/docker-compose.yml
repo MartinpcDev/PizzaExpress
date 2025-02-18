@@ -1,0 +1,21 @@
+services:
+  ecommercedb:
+    image: postgres:latest
+    container_name: ecommercedb
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ecommercedb:/var/lib/postgresql/data
+    networks:
+      - ecommercenet
+
+volumes:
+  ecommercedb:
+networks:
+  ecommercenet:
