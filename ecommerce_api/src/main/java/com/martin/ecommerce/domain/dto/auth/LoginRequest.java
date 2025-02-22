@@ -1,9 +1,11 @@
 package com.martin.ecommerce.domain.dto.auth;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record LoginRequest(
-    String name,
+    @NotBlank(message = "Username is required")
     String username,
-    String email,
+    @NotBlank(message = "Password is required")
     String password
 ) {
 
