@@ -1,6 +1,6 @@
-package com.martin.ecommerce.application.service;
+package com.martin.ecommerce.application.service.Impl;
 
-import com.martin.ecommerce.application.interfaces.AuthService;
+import com.martin.ecommerce.application.service.AuthService;
 import com.martin.ecommerce.application.utils.JwtUtils;
 import com.martin.ecommerce.domain.dto.auth.LoginRequest;
 import com.martin.ecommerce.domain.dto.auth.LoginResponse;

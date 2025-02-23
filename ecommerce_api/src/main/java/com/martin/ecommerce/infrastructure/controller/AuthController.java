@@ -1,6 +1,6 @@
 package com.martin.ecommerce.infrastructure.controller;
 
-import com.martin.ecommerce.application.interfaces.AuthService;
+import com.martin.ecommerce.application.service.AuthService;
 import com.martin.ecommerce.application.utils.UserUtils;
 import com.martin.ecommerce.domain.dto.auth.LoginRequest;
 import com.martin.ecommerce.domain.dto.auth.LoginResponse;
