@@ -1,6 +1,7 @@
 package com.martin.ecommerce.application.service.Impl;
 
 import com.martin.ecommerce.application.service.AuthService;
+import com.martin.ecommerce.application.service.EmailService;
 import com.martin.ecommerce.application.utils.JwtUtils;
 import com.martin.ecommerce.domain.dto.auth.LoginRequest;
 import com.martin.ecommerce.domain.dto.auth.LoginResponse;
@@ -11,6 +12,7 @@ import com.martin.ecommerce.domain.dto.auth.RegisterResponse;
 import com.martin.ecommerce.domain.exception.InvalidAuthException;
 import com.martin.ecommerce.domain.model.User;
 import com.martin.ecommerce.infrastructure.repository.UserRepository;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
   private final JwtUtils jwtUtils;
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
+  private final EmailService emailService;
 
   @Override
   public LoginResponse login(LoginRequest loginRequest) {
@@ -33,6 +36,10 @@ public class AuthServiceImpl implements AuthService {
 
     if (!passwordEncoder.matches(loginRequest.password(), userExists.getPassword())) {
       throw new InvalidAuthException("Invalid password");
+    }
+
+    if (!userExists.isEmailConfirmation()) {
+      throw new InvalidAuthException("Please confirm your email");
     }
 
     String accessToken = jwtUtils.generateAccessToken(userExists);
@@ -57,6 +64,9 @@ public class AuthServiceImpl implements AuthService {
     user.setName(registerRequest.name());
     user.setUsername(registerRequest.username());
     user.setPassword(passwordEncoder.encode(registerRequest.password()));
+    user.setEmailConfirmation(false);
+    user.setConfirmationCode(generateConfirmationCode());
+    emailService.sendConfirmationCode(user);
 
     userRepository.save(user);
 
@@ -85,5 +95,9 @@ public class AuthServiceImpl implements AuthService {
     String newAccessToken = jwtUtils.generateAccessToken(user);
 
     return new LoginResponse("Token refreshed", newAccessToken, refreshToken);
+  }
+
+  private String generateConfirmationCode() {
+    return UUID.randomUUID().toString();
   }
 }

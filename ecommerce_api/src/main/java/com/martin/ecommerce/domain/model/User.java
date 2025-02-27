@@ -47,6 +47,8 @@ public class User implements UserDetails {
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private UserRole role = UserRole.USER;
+  private boolean emailConfirmation;
+  private String confirmationCode;
   @CreationTimestamp
   @Column(updatable = false, nullable = false)
   private LocalDateTime createdAt;
