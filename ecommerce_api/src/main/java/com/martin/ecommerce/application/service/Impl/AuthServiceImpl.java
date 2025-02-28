@@ -9,6 +9,8 @@ import com.martin.ecommerce.domain.dto.auth.ProfileResponse;
 import com.martin.ecommerce.domain.dto.auth.RefreshRequest;
 import com.martin.ecommerce.domain.dto.auth.RegisterRequest;
 import com.martin.ecommerce.domain.dto.auth.RegisterResponse;
+import com.martin.ecommerce.domain.dto.common.MessageResponse;
+import com.martin.ecommerce.domain.dto.email.ConfirmationRequest;
 import com.martin.ecommerce.domain.exception.InvalidAuthException;
 import com.martin.ecommerce.domain.model.User;
 import com.martin.ecommerce.infrastructure.repository.UserRepository;
@@ -95,6 +97,22 @@ public class AuthServiceImpl implements AuthService {
     String newAccessToken = jwtUtils.generateAccessToken(user);
 
     return new LoginResponse("Token refreshed", newAccessToken, refreshToken);
+  }
+
+  @Override
+  public MessageResponse confirmEmail(ConfirmationRequest confirmationRequest) {
+    User user = userRepository.findByEmailIgnoreCase(confirmationRequest.email())
+        .orElseThrow(() -> new InvalidAuthException("User not found"));
+
+    if (!user.getConfirmationCode().equals(confirmationRequest.token())) {
+      throw new InvalidAuthException("Invalid confirmation code");
+    }
+
+    user.setEmailConfirmation(true);
+    user.setConfirmationCode(null);
+    userRepository.save(user);
+    
+    return new MessageResponse("Email confirmed successfully");
   }
 
   private String generateConfirmationCode() {

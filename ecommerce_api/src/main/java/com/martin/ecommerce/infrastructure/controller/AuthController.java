@@ -8,6 +8,8 @@ import com.martin.ecommerce.domain.dto.auth.ProfileResponse;
 import com.martin.ecommerce.domain.dto.auth.RefreshRequest;
 import com.martin.ecommerce.domain.dto.auth.RegisterRequest;
 import com.martin.ecommerce.domain.dto.auth.RegisterResponse;
+import com.martin.ecommerce.domain.dto.common.MessageResponse;
+import com.martin.ecommerce.domain.dto.email.ConfirmationRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,6 +47,12 @@ public class AuthController {
   public ResponseEntity<LoginResponse> refreshToken(
       @RequestBody @Valid RefreshRequest refreshRequest) {
     return ResponseEntity.ok(authService.refresh(refreshRequest));
+  }
+
+  @PostMapping("/confirm-email")
+  public ResponseEntity<MessageResponse> confirmEmail(
+      @RequestBody @Valid ConfirmationRequest confirmationRequest) {
+    return ResponseEntity.ok(authService.confirmEmail(confirmationRequest));
   }
 
   @PreAuthorize("isAuthenticated()")

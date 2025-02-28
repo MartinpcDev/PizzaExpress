@@ -6,6 +6,8 @@ import com.martin.ecommerce.domain.dto.auth.ProfileResponse;
 import com.martin.ecommerce.domain.dto.auth.RefreshRequest;
 import com.martin.ecommerce.domain.dto.auth.RegisterRequest;
 import com.martin.ecommerce.domain.dto.auth.RegisterResponse;
+import com.martin.ecommerce.domain.dto.common.MessageResponse;
+import com.martin.ecommerce.domain.dto.email.ConfirmationRequest;
 
 public interface AuthService {
 
@@ -16,4 +18,6 @@ public interface AuthService {
   ProfileResponse profile(Long userId);
 
   LoginResponse refresh(RefreshRequest refreshRequest);
+
+  MessageResponse confirmEmail(ConfirmationRequest confirmationRequest);
 }
